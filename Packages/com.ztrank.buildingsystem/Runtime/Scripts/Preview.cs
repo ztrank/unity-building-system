@@ -133,6 +133,7 @@ namespace ZTrank.BuildingSystem
         private void LateUpdate()
         {
             this.UpdateMaterial();
+            this.ClearDeadColliders();
         }
 
         private void UpdateMaterial()
@@ -164,6 +165,17 @@ namespace ZTrank.BuildingSystem
             if (((1 << collision.gameObject.layer) & this.m_BuildingSystemSettings.m_BuildingBlockedLayers) != 0)
             {
                 this.m_Collisions.Remove(collision.collider);
+            }
+        }
+
+        private void ClearDeadColliders()
+        {
+            for (int i = this.m_Collisions.Count - 1; i >= 0; --i)
+            {
+                if (this.m_Collisions[i] == null)
+                {
+                    this.m_Collisions.RemoveAt(i);
+                }
             }
         }
     }

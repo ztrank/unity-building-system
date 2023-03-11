@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             if (this.m_BuildingSystem.IsPaused)
             {
@@ -177,6 +177,18 @@ public class PlayerController : MonoBehaviour
             else
             {
                 this.m_BuildingSystem.Pause();
+            }
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                this.m_BuildingSystem.Undo();
+            }
+            else if (Input.GetKeyDown(KeyCode.Y))
+            {
+                this.m_BuildingSystem.Redo();
             }
         }
 

@@ -3,6 +3,7 @@ namespace ZTrank.BuildingSystem
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using UnityEngine;
 
     public enum BuildingFace
@@ -16,26 +17,33 @@ namespace ZTrank.BuildingSystem
         South
     }
 
-    public enum RotationOrientation 
-    {
-        Up,
-        Forward,
-        Right
-    }
 
-    public enum RotationDirection
-    {
-        Positive,
-        Negative
-    }
 
     public class BuildingSystem : MonoBehaviour
     {
+        enum BuildingSystemEventType
+        {
+            Add,
+            Remove
+        }
+
+        class BuildingSystemEvent
+        {
+            public BuildingSystemEventType Type { get; set; }
+            public Building Building { get; set; }
+            public Blueprint Blueprint { get; set; }
+            public Vector3 Position { get; set; }
+            public SnapPoint SnapPoint { get; set; }
+            public Quaternion Rotation { get; set; }
+            public Transform Parent { get; set; }
+        }
+
         [SerializeField]
         private BuildingSystemSettings m_BuildingSystemSettings;
 
         public event Action<Building> OnBuildSuccess;
         public event Action<Building> OnPreBuildingRemove;
+        private List<BuildingSystemEvent> m_EventList;
 
         public BuildingSystemSettings Settings => this.m_BuildingSystemSettings;
 
@@ -45,6 +53,11 @@ namespace ZTrank.BuildingSystem
         private Vector3 m_CurrentRotation;
         private bool m_IsPaused = false;
         private BuildingFace m_CurrentFace;
+
+        private void Awake()
+        {
+            this.m_EventList = new List<BuildingSystemEvent>();
+        }
 
         public bool IsPaused => this.m_IsPaused;
 
@@ -150,19 +163,137 @@ namespace ZTrank.BuildingSystem
             }
         }
 
-        public bool TryRemove(Func<GameObject, bool> canRemove = null)
+        private List<BuildingSystemEvent> m_RedoEvents = new List<BuildingSystemEvent>();
+
+
+        private Building CreateBuilding(Building prefab, Transform parent, Vector3 position, Quaternion rotation, Blueprint blueprint, SnapPoint snapPoint)
+        {
+            Building obj = Instantiate(prefab, parent);
+
+            obj.transform.SetPositionAndRotation(position, rotation);
+            obj.gameObject.name = obj.gameObject.name.Replace("(Clone)", "");
+            obj.Blueprint = blueprint;
+
+            if (snapPoint != null)
+            {
+                snapPoint.Occupy(obj);
+                obj.SnapPoint = snapPoint;
+            }
+            this.OnBuildSuccess?.Invoke(obj);
+            return obj;
+        }
+
+        private void DestroyBuilding(Building building)
+        {
+            this.OnPreBuildingRemove?.Invoke(building);
+            Destroy(building.gameObject);
+        }
+
+        public void Redo()
+        {
+            if (this.m_RedoEvents.Any())
+            {
+                BuildingSystemEvent evt = this.m_RedoEvents.Last();
+                if (evt.Type == BuildingSystemEventType.Add)
+                {
+                    Building obj = this.CreateBuilding(evt.Blueprint.Prefab, evt.Parent, evt.Position, evt.Rotation, evt.Blueprint, evt.SnapPoint);
+                    this.m_EventList.Add(new BuildingSystemEvent()
+                    {
+                        Type = BuildingSystemEventType.Add,
+                        Blueprint = evt.Blueprint,
+                        SnapPoint = evt.SnapPoint,
+                        Building = obj,
+                        Position = evt.Position,
+                        Rotation = evt.Rotation,
+                        Parent = evt.Parent
+                    });
+                }
+                else if (evt.Type == BuildingSystemEventType.Remove)
+                {
+                    this.m_EventList.Add(new BuildingSystemEvent()
+                    {
+                        Type = BuildingSystemEventType.Remove,
+                        Blueprint = evt.Blueprint,
+                        SnapPoint = evt.SnapPoint,
+                        Position = evt.Position,
+                        Rotation = evt.Rotation,
+                        Parent = evt.Parent
+                    });
+                    this.DestroyBuilding(evt.Building);
+                }
+
+                this.m_RedoEvents.Remove(evt);
+            }
+        }
+
+        public void Undo()
+        {
+            if (this.m_EventList.Any())
+            {
+                BuildingSystemEvent evt = this.m_EventList.Last();
+                
+                if (evt.Type == BuildingSystemEventType.Add)
+                {
+                    this.m_RedoEvents.Add(new BuildingSystemEvent()
+                    {
+                        Type = BuildingSystemEventType.Add,
+                        Blueprint = evt.Blueprint,
+                        SnapPoint = evt.SnapPoint,
+                        Position = evt.Position,
+                        Rotation = evt.Rotation,
+                        Parent = evt.Parent
+                    });
+                    this.DestroyBuilding(evt.Building);
+                    
+                }
+                else if (evt.Type == BuildingSystemEventType.Remove)
+                {
+                    Building obj = this.CreateBuilding(evt.Blueprint.Prefab, evt.Parent, evt.Position, evt.Rotation, evt.Blueprint, evt.SnapPoint);
+                    this.m_RedoEvents.Add(new BuildingSystemEvent()
+                    {
+                        Type = BuildingSystemEventType.Remove,
+                        Blueprint = evt.Blueprint,
+                        SnapPoint = evt.SnapPoint,
+                        Building = obj,
+                        Position = evt.Position,
+                        Rotation = evt.Rotation,
+                        Parent = evt.Parent
+                    });
+                }
+
+                this.m_EventList.Remove(evt);
+            }
+        }
+
+        private void AddEvent(BuildingSystemEvent evt)
+        {
+            // Clear redo list
+            this.m_RedoEvents.Clear();
+            this.m_EventList.Add(evt);
+        }
+
+        public bool TryRemove(Func<Building, bool> canRemove = null)
         {
             if (!this.m_IsPaused && Physics.Raycast(this.m_ScreenRay, out RaycastHit hitInfo, Mathf.Infinity, this.m_BuildingSystemSettings.m_BuildingLayer))
             {
-                
-                if (canRemove == null || canRemove(hitInfo.collider.transform.parent.gameObject))
+                Building building = hitInfo.collider.gameObject.GetComponentInParent<Building>();
+                if (building != null)
                 {
-                    this.OnPreBuildingRemove?.Invoke(hitInfo.collider.transform.parent.gameObject.GetComponent<Building>());
-                    Destroy(hitInfo.collider.transform.parent.gameObject);
-                    return true;
+                    if (canRemove == null || canRemove(building))
+                    {
+                        this.AddEvent(new BuildingSystemEvent()
+                        {
+                            Type = BuildingSystemEventType.Remove,
+                            Blueprint = building.Blueprint,
+                            SnapPoint = building.SnapPoint,
+                            Position = building.transform.position,
+                            Rotation = building.transform.rotation,
+                            Parent = building.transform.parent
+                        });
+                        this.DestroyBuilding(building);
+                        return true;
+                    }
                 }
-
-                return false;
             }
 
             return false;
@@ -180,17 +311,17 @@ namespace ZTrank.BuildingSystem
                     return false;
                 }
 
-                obj = Instantiate(this.m_CurrentBlueprint.Prefab, parent ? parent : this.transform);
-                Quaternion rotation = this.m_CurrentPreview.transform.rotation;
-                obj.transform.SetPositionAndRotation(this.m_CurrentPreview.transform.position, rotation);
-                obj.gameObject.name = obj.gameObject.name.Replace("(Clone)", "");
-
-                if (sp != null)
+                obj = this.CreateBuilding(this.m_CurrentBlueprint.Prefab, parent ? parent : this.transform, this.m_CurrentPreview.transform.position, this.m_CurrentPreview.transform.rotation, this.m_CurrentBlueprint, sp);
+                this.AddEvent(new BuildingSystemEvent()
                 {
-                    sp.Occupy(obj);
-                    obj.SnapPoint = sp;
-                }
-                this.OnBuildSuccess?.Invoke(obj);
+                    Type = BuildingSystemEventType.Add,
+                    Blueprint = this.m_CurrentBlueprint,
+                    SnapPoint = sp,
+                    Building = obj,
+                    Position = this.m_CurrentPreview.transform.position,
+                    Rotation = this.m_CurrentPreview.transform.rotation,
+                    Parent = parent ? parent : this.transform
+                });
                 return true;
             }
             

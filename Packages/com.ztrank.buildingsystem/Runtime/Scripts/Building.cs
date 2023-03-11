@@ -18,6 +18,8 @@ namespace ZTrank.BuildingSystem
 
         public SnapPoint SnapPoint { get; set; }
 
+        public Blueprint Blueprint { get; set; }
+
         private void OnDestroy()
         {
             if (this.SnapPoint != null)

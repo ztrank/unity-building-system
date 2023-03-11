@@ -145,8 +145,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MeshRenderer: {fileID: 4530973565133222840}
   m_BuildingType: 1
-  m_OverrideOrientationCoefficient: 1
-  m_OverrideOrientationCoefficientAmount: 90
+  m_OverrideOrientationCoefficient: 0
+  m_OverrideOrientationCoefficientAmount: 0
 --- !u!1001 &440104152847755919
 PrefabInstance:
   m_ObjectHideFlags: 0
