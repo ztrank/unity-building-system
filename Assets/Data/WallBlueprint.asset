@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373da27104d48c44e983ec9236785fce, type: 3}
+  m_Name: WallBlueprint
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 6707456969409958129, guid: 344722f2d2428a84189bb4c231800ff3, type: 3}
+  Preview: {fileID: 205366088291901530, guid: 644e1cc0b2ad4af469ce0d4a3455d636, type: 3}
+  Offset: {x: 0.5, y: 0.5, z: 0.025}
+  BuildingType: 1

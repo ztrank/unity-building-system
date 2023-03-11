@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e36061408006da4bb858a58317be6a2, type: 3}
+  m_Name: BuildingSystemSettings
+  m_EditorClassIdentifier: 
+  m_PreviewPlaceable: {fileID: 2100000, guid: ef5dc28b240f1b943a893e0984e3e679, type: 2}
+  m_PreviewUnplaceable: {fileID: 2100000, guid: d4f70e7d57fd140459a3e5167ee71886, type: 2}
+  m_BuildableLayer:
+    serializedVersion: 2
+    m_Bits: 72
+  m_BuildingLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  m_BuildingPreviewLayer:
+    serializedVersion: 2
+    m_Bits: 128
+  m_BuildingBlockedLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  m_SnapPointLayer:
+    serializedVersion: 2
+    m_Bits: 256
