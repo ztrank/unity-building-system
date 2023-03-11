@@ -12,8 +12,21 @@ namespace ZTrank.BuildingSystem
         Down,
         East,
         West,
-        North, 
+        North,
         South
+    }
+
+    public enum RotationOrientation 
+    {
+        Up,
+        Forward,
+        Right
+    }
+
+    public enum RotationDirection
+    {
+        Positive,
+        Negative
     }
 
     public class BuildingSystem : MonoBehaviour
@@ -34,6 +47,21 @@ namespace ZTrank.BuildingSystem
         private BuildingFace m_CurrentFace;
 
         public bool IsPaused => this.m_IsPaused;
+
+        public void Rotate(float amount)
+        {
+            this.m_CurrentRotation = this.m_BuildingSystemSettings.m_RotationSpeed * amount * Vector3.up;
+        }
+
+        public void SnapRotate(Vector3 orientation)
+        {
+            if (this.m_CurrentPreview != null)
+            {
+                this.m_CurrentPreview.Orientation += orientation;
+            }
+        }
+
+        public bool IsSnapped => this.m_CurrentPreview != null && this.m_CurrentPreview.SnapPoint != null;
 
         private void Update()
         {
@@ -207,15 +235,6 @@ namespace ZTrank.BuildingSystem
             this.m_ScreenRay = screenRay;
         }
 
-        public void MovePreview(Vector3 position)
-        {
-            this.m_CurrentPosition = position;
-        }
-
-        public void RotatePreview(Vector3 angles)
-        {
-            this.m_CurrentRotation = angles;
-        }
 
         private void UpdatePreviewPositionAndRotation()
         {

@@ -16,6 +16,16 @@ namespace ZTrank.BuildingSystem
         [SerializeField]
         private BuildingType m_BuildingType;
 
+        [SerializeField]
+        private bool m_OverrideOrientationCoefficient = false;
+
+        [SerializeField]
+        private float m_OverrideOrientationCoefficientAmount;
+
+        protected virtual float OrientationCoefficient => 90f;
+
+        public Vector3 Orientation { get; set; }
+
         private BuildingSystemSettings m_BuildingSystemSettings;
 
         private void Awake()
@@ -51,7 +61,7 @@ namespace ZTrank.BuildingSystem
 
             if (this.SnapPoint != null && targetFace != BuildingFace.None) 
             {
-                this.transform.rotation = this.GetSnapPointRotation();
+                this.transform.rotation = this.GetSnapPointRotation() * Quaternion.Euler(this.Orientation * (this.m_OverrideOrientationCoefficient ? this.m_OverrideOrientationCoefficientAmount : this.OrientationCoefficient));
             }
             else
             {

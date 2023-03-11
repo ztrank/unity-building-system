@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e36061408006da4bb858a58317be6a2, type: 3}
   m_Name: BuildingSystemSettings
   m_EditorClassIdentifier: 
+  m_RotationSpeed: 10
   m_PreviewPlaceable: {fileID: 2100000, guid: ef5dc28b240f1b943a893e0984e3e679, type: 2}
   m_PreviewUnplaceable: {fileID: 2100000, guid: d4f70e7d57fd140459a3e5167ee71886, type: 2}
   m_BuildableLayer:
