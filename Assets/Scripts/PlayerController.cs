@@ -31,10 +31,18 @@ public class PlayerController : MonoBehaviour
         this.m_BuildingSystem.SetScreenRay(Camera.main.ScreenPointToRay(Input.mousePosition));
         //this.m_BuildingSystem.MovePreview(this.m_GroundPointerPosition);
 
-        if (Input.GetMouseButtonDown(0) && !this.IsHittingUI() && this.m_BuildingSystem.TryBuild(out GameObject child))
+        if (Input.GetMouseButtonDown(0) && !this.IsHittingUI())
         {
-            Debug.Log($"Building Successful: {child.name}");
+            if (this.m_BuildingSystem.TryBuild(out Building child))
+            {
+                Debug.Log($"Building Successful: {child.name}");
+            }
+            else
+            {
+                Debug.Log($"{this.m_BuildingSystem.GetInvalidReasons()}");
+            }
         }
+        
 
         if (Input.GetMouseButtonDown(1) && !this.IsHittingUI())
         {

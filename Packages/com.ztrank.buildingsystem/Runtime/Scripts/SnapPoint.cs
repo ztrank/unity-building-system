@@ -18,10 +18,9 @@ namespace ZTrank.BuildingSystem
         [SerializeField]
         private BuildingFace m_SlotDirection;
 
-        [SerializeField]
-        private bool m_UseBuildingRotation = false;
-
         private Collider m_Collider;
+        private Building m_Building;
+        private Building m_Occupied;
 
         public BuildingFace BuildingFace => this.m_BuildingFace;
 
@@ -31,11 +30,20 @@ namespace ZTrank.BuildingSystem
 
         public Collider Collider => this.m_Collider;
 
-        public Quaternion Rotation => this.m_UseBuildingRotation ? this.GetComponentInParent<Building>().transform.rotation : this.transform.rotation;
+        public Building Building => this.m_Building;
+
+        public bool IsOccupied => this.m_Occupied != null;
 
         private void Awake()
         {
             this.m_Collider = this.GetComponent<Collider>();
+            this.m_Building = this.GetComponentInParent<Building>();
+            Debug.Assert(this.m_Building != null);
+        }
+
+        public void Occupy(Building building)
+        {
+            this.m_Occupied = building;
         }
     }
 }

@@ -23,9 +23,41 @@ namespace ZTrank.BuildingSystem
             this.m_Collisions = new List<Collider>();
         }
 
-        public bool IsPlaceable => !this.m_Collisions.Any() && this.m_BuildingType == BuildingType.Foundation || this.SnapPoint != null;
+        public bool IsPlaceable => (!this.Blueprint.RequireFoundation || this.SnapPoint != null) && !this.m_Collisions.Any();
+
+        public string GetReasons()
+        {
+            if (this.Blueprint.RequireFoundation && this.SnapPoint == null)
+            {
+                return "Must be built on a snap point.";
+            }
+
+            if (this.m_Collisions.Any())
+            {
+                return $"Building Obstructed: {this.m_Collisions[0].gameObject.name}";
+            }
+
+            return string.Empty;
+        }
 
         public SnapPoint SnapPoint { get; set; }
+
+        public Blueprint Blueprint { get; set; }
+
+        public void UpdatePositionAndRotation(Vector3 targetPosition, Vector3 targetRotation, BuildingFace targetFace)
+        {
+
+            this.transform.position = this.GetPosition(targetPosition, targetRotation, targetFace);
+
+            if (this.SnapPoint != null && targetFace != BuildingFace.None) 
+            {
+                this.transform.rotation = this.GetSnapPointRotation();
+            }
+            else
+            {
+                this.transform.Rotate(targetRotation);
+            }
+        }
 
         public void SetSettings(BuildingSystemSettings settings)
         {
@@ -39,10 +71,53 @@ namespace ZTrank.BuildingSystem
 
         private void Update()
         {
+            
+        }
+
+        protected virtual Quaternion GetSnapPointRotation()
+        {
+            return this.Blueprint.UseBuildingRotation ? this.SnapPoint.Building.transform.rotation : this.SnapPoint.transform.rotation;
+        }
+
+        protected virtual Vector3 GetPosition(Vector3 targetPosition, Vector3 targetRotation, BuildingFace targetFace)
+        {
+            Vector3 newPosition = targetPosition;
             if (this.SnapPoint != null)
             {
-                this.transform.rotation = this.SnapPoint.Rotation;
+                Vector3 offsetDirection = Vector3.zero;
+                float offsetAmount = 0;
+
+                if (this.SnapPoint.SlotDirection != BuildingFace.None)
+                {
+                    switch (targetFace)
+                    {
+                        case BuildingFace.Up:
+                            offsetDirection = this.SnapPoint.transform.up;
+                            offsetAmount = this.Blueprint.Size.y / 2;
+                            break;
+                        case BuildingFace.Down:
+                            offsetDirection = this.SnapPoint.transform.up;
+                            offsetAmount = -this.Blueprint.Size.y / 2;
+                            break;
+                        case BuildingFace.East:
+                        case BuildingFace.West:
+                        case BuildingFace.North:
+                        case BuildingFace.South:
+                            offsetDirection = this.SnapPoint.transform.forward;
+                            offsetAmount = this.Blueprint.Size.z / 2;
+                            break;
+                    }
+                }
+                else
+                {
+                    offsetAmount = this.Blueprint.Size.z / 2;
+                    offsetDirection = this.SnapPoint.transform.forward;
+                }
+
+                newPosition += offsetDirection * offsetAmount;
             }
+            
+            return newPosition;
         }
 
         private void LateUpdate()

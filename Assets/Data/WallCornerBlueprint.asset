@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 373da27104d48c44e983ec9236785fce, type: 3}
-  m_Name: WallBlueprint
+  m_Name: WallCornerBlueprint
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 6707456969409958130, guid: 344722f2d2428a84189bb4c231800ff3, type: 3}
-  Preview: {fileID: -3864959657928164828, guid: 644e1cc0b2ad4af469ce0d4a3455d636, type: 3}
-  Size: {x: 1, y: 1, z: 0.05}
+  Prefab: {fileID: 8220785827547345015, guid: cecb6089577de614ab66105db7706532, type: 3}
+  Preview: {fileID: 4530973565547500056, guid: 279770d7b0226ca47b4a09b9fe2f4ec2, type: 3}
+  Size: {x: 0.05, y: 1, z: 0.05}
   BuildingType: 1
   UseBuildingRotation: 0
   RequireFoundation: 1

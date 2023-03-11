@@ -113,10 +113,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e33656fa4260344b2caa5710c2bf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BuildingTypes: 00000000
+  m_BuildingTypes: 0000000001000000
   m_BuildingFace: 3
   m_SlotDirection: 0
-  m_UseBuildingRotation: 1
 --- !u!1 &1927608778280264349
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,7 +177,6 @@ MonoBehaviour:
   m_BuildingTypes: 00000000
   m_BuildingFace: 2
   m_SlotDirection: 0
-  m_UseBuildingRotation: 1
 --- !u!1 &1990035094194987085
 GameObject:
   m_ObjectHideFlags: 0
@@ -237,10 +235,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e33656fa4260344b2caa5710c2bf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BuildingTypes: 00000000
+  m_BuildingTypes: 0000000001000000
   m_BuildingFace: 6
   m_SlotDirection: 0
-  m_UseBuildingRotation: 1
 --- !u!1 &2866141605592450836
 GameObject:
   m_ObjectHideFlags: 0
@@ -381,7 +378,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3105908047653722412}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0.525, y: 0.5, z: 0}
   m_LocalScale: {x: 0.95, y: 0, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -416,7 +413,6 @@ MonoBehaviour:
   m_BuildingTypes: 01000000
   m_BuildingFace: 1
   m_SlotDirection: 3
-  m_UseBuildingRotation: 0
 --- !u!1 &3398113708442766429
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,10 +471,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e33656fa4260344b2caa5710c2bf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BuildingTypes: 00000000
+  m_BuildingTypes: 0000000001000000
   m_BuildingFace: 5
   m_SlotDirection: 0
-  m_UseBuildingRotation: 1
 --- !u!1 &4578667900704192760
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +500,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4578667900704192760}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0.525}
   m_LocalScale: {x: 0.95, y: 0, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -540,7 +535,6 @@ MonoBehaviour:
   m_BuildingTypes: 01000000
   m_BuildingFace: 1
   m_SlotDirection: 5
-  m_UseBuildingRotation: 0
 --- !u!1 &7265890712531763155
 GameObject:
   m_ObjectHideFlags: 0
@@ -599,10 +593,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e33656fa4260344b2caa5710c2bf2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BuildingTypes: 00000000
+  m_BuildingTypes: 0000000001000000
   m_BuildingFace: 4
   m_SlotDirection: 0
-  m_UseBuildingRotation: 1
 --- !u!1 &7442184252011975511
 GameObject:
   m_ObjectHideFlags: 0
@@ -664,7 +657,6 @@ MonoBehaviour:
   m_BuildingTypes: 00000000
   m_BuildingFace: 1
   m_SlotDirection: 0
-  m_UseBuildingRotation: 1
 --- !u!1 &8000661203105168929
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +683,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8000661203105168929}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.5, z: -0.5}
+  m_LocalPosition: {x: 0, y: 0.5, z: -0.525}
   m_LocalScale: {x: 0.95, y: 0, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -726,7 +718,6 @@ MonoBehaviour:
   m_BuildingTypes: 01000000
   m_BuildingFace: 1
   m_SlotDirection: 6
-  m_UseBuildingRotation: 0
 --- !u!1 &8785893119551695451
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,7 +744,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8785893119551695451}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: -0.525, y: 0.5, z: 0}
   m_LocalScale: {x: 0.95, y: 0, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -788,4 +779,3 @@ MonoBehaviour:
   m_BuildingTypes: 01000000
   m_BuildingFace: 1
   m_SlotDirection: 4
-  m_UseBuildingRotation: 0

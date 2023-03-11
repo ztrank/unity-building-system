@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 373da27104d48c44e983ec9236785fce, type: 3}
   m_Name: CubeBlueprint
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 824285832537990475, guid: ca0e4bf9edda25749bb022443e074086, type: 3}
+  Prefab: {fileID: 1058881700722194822, guid: ca0e4bf9edda25749bb022443e074086, type: 3}
   Preview: {fileID: 5568226078442950180, guid: c9e8f267ef0973b449f8f5cf1c59ffaa, type: 3}
-  Offset: {x: 0.5, y: 0.5, z: 0.5}
+  Size: {x: 1, y: 1, z: 1}
+  BuildingType: 0
+  UseBuildingRotation: 1
+  RequireFoundation: 0

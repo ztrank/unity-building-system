@@ -21,8 +21,8 @@ namespace ZTrank.BuildingSystem
         [SerializeField]
         private BuildingSystemSettings m_BuildingSystemSettings;
 
-        public event Action<GameObject> OnBuildSuccess;
-        public event Action<GameObject> OnPreBuildingRemove;
+        public event Action<Building> OnBuildSuccess;
+        public event Action<Building> OnPreBuildingRemove;
 
         public BuildingSystemSettings Settings => this.m_BuildingSystemSettings;
 
@@ -129,7 +129,7 @@ namespace ZTrank.BuildingSystem
                 
                 if (canRemove == null || canRemove(hitInfo.collider.transform.parent.gameObject))
                 {
-                    this.OnPreBuildingRemove?.Invoke(hitInfo.collider.transform.parent.gameObject);
+                    this.OnPreBuildingRemove?.Invoke(hitInfo.collider.transform.parent.gameObject.GetComponent<Building>());
                     Destroy(hitInfo.collider.transform.parent.gameObject);
                     return true;
                 }
@@ -140,13 +140,28 @@ namespace ZTrank.BuildingSystem
             return false;
         }
 
-        public bool TryBuild(out GameObject obj, Transform parent = null)
+        public bool TryBuild(out Building obj, Transform parent = null)
         {
             if (!this.m_IsPaused && this.m_CurrentBlueprint != null && this.m_CurrentPreview != null && this.m_CurrentPreview.IsPlaceable && Physics.Raycast(this.m_ScreenRay, Mathf.Infinity, this.m_BuildingSystemSettings.m_BuildableLayer))
             {
+                SnapPoint sp = this.m_CurrentPreview.SnapPoint;
+
+                if (sp != null && sp.IsOccupied)
+                {
+                    obj = null;
+                    return false;
+                }
+
                 obj = Instantiate(this.m_CurrentBlueprint.Prefab, parent ? parent : this.transform);
-                Quaternion rotation = this.m_CurrentPreview.SnapPoint == null ? this.m_CurrentPreview.transform.rotation : this.m_CurrentPreview.SnapPoint.Rotation;
+                Quaternion rotation = this.m_CurrentPreview.transform.rotation;
                 obj.transform.SetPositionAndRotation(this.m_CurrentPreview.transform.position, rotation);
+                obj.gameObject.name = obj.gameObject.name.Replace("(Clone)", "");
+
+                if (sp != null)
+                {
+                    sp.Occupy(obj);
+                    obj.SnapPoint = sp;
+                }
                 this.OnBuildSuccess?.Invoke(obj);
                 return true;
             }
@@ -156,6 +171,15 @@ namespace ZTrank.BuildingSystem
             return false;
         }
 
+        public string GetInvalidReasons()
+        {
+            if (this.m_CurrentPreview != null)
+            {
+                return this.m_CurrentPreview.GetReasons();
+            }
+
+            return string.Empty;
+        }
         
 
         public void SetBlueprint(Blueprint blueprint)
@@ -173,6 +197,7 @@ namespace ZTrank.BuildingSystem
                 this.m_CurrentPreview.transform.position = this.m_CurrentPosition;
                 this.m_CurrentPreview.gameObject.SetActive(!this.m_IsPaused);
                 this.m_CurrentPreview.SetSettings(this.m_BuildingSystemSettings);
+                this.m_CurrentPreview.Blueprint = this.m_CurrentBlueprint;
             }
         }
 
@@ -196,59 +221,8 @@ namespace ZTrank.BuildingSystem
         {
             if (!this.m_IsPaused && this.m_CurrentPreview != null && this.m_CurrentBlueprint != null)
             {
-                Vector3 newPosition = this.m_CurrentPosition;
-                Vector3 faceDirection = Vector3.zero;
-                Debug.Log($"Current Face {this.m_CurrentFace}");
-                switch(this.m_CurrentFace)
-                {
-                    case BuildingFace.Up:
-                        faceDirection = new Vector3(0, this.m_CurrentBlueprint.Offset.y, 0);
-                        break;
-                    case BuildingFace.Down:
-                        faceDirection = new Vector3(0, -this.m_CurrentBlueprint.Offset.y, 0);
-                        break;
-                    case BuildingFace.East:
-                        faceDirection = new Vector3(this.m_CurrentBlueprint.Offset.x, 0, 0);
-                        break;
-                    case BuildingFace.West:
-                        faceDirection = new Vector3(-this.m_CurrentBlueprint.Offset.x, 0, 0);
-                        break;
-                    case BuildingFace.North:
-                        faceDirection = new Vector3(0, 0, this.m_CurrentBlueprint.Offset.z);
-                        break;
-                    case BuildingFace.South:
-                        faceDirection = new Vector3(0, 0, -this.m_CurrentBlueprint.Offset.z);
-                        break;
-                }
-
-                newPosition += faceDirection;
-
-                if (this.m_CurrentFace == BuildingFace.None)
-                {
-                    this.m_CurrentPreview.transform.Rotate(this.m_CurrentRotation);
-                }
-
-                this.m_CurrentPreview.transform.position = newPosition + (this.m_CurrentPreview.SnapPoint == null ? Vector3.zero : this.Multiply(this.GetSlotOffsetVector(this.m_CurrentPreview.SnapPoint.SlotDirection), this.m_CurrentBlueprint.Offset));
+                this.m_CurrentPreview.UpdatePositionAndRotation(this.m_CurrentPosition, this.m_CurrentRotation, this.m_CurrentFace);
             }
-        }
-
-        private Vector3 GetSlotOffsetVector(BuildingFace slotDirection)
-        {
-            return slotDirection switch
-            {
-                BuildingFace.North => new Vector3(0, 0, -1),
-                BuildingFace.South => new Vector3(0, 0, 1),
-                BuildingFace.East => new Vector3(-1, 0, 0),
-                BuildingFace.West => new Vector3(1, 0, 0),
-                BuildingFace.Up => new Vector3(0, 1, 0),
-                BuildingFace.Down => new Vector3(0, -1, 0),
-                _ => Vector3.zero,
-            };
-        }
-
-        private Vector3 Multiply(Vector3 a, Vector3 b)
-        {
-            return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
         }
     }
 }
