@@ -176,9 +176,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 32
   m_Canvas: {fileID: 829385771}
-  m_MovementSpeed: 10
   m_RotationSpeed: 5
   m_Camera: {fileID: 963194227}
+  m_MovementSpeed: 10
 --- !u!1 &54506524
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,12 +1530,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
   m_ChildAlignment: 4
-  m_Spacing: 10
+  m_Spacing: 5
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
