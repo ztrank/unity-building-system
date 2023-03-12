@@ -7,6 +7,7 @@ namespace ZTrank.BuildingSystem
     [CreateAssetMenu(fileName = "BuildingSystemSettings", menuName = "Building System/Settings", order = 1)]
     public class BuildingSystemSettings : ScriptableObject
     {
+        public float m_RotationSpeed;
         public Material m_PreviewPlaceable;
         public Material m_PreviewUnplaceable;
         public LayerMask m_BuildableLayer;

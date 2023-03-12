@@ -6,6 +6,7 @@ namespace ZTrank.BuildingSystem
 {
     public class WallPreview : Preview
     {
+        protected override float OrientationCoefficient => 180f;
         protected override Quaternion GetSnapPointRotation()
         {
             if (this.SnapPoint.Building.BuildingType == BuildingType.Wall && (this.SnapPoint.BuildingFace == BuildingFace.East || this.SnapPoint.BuildingFace == BuildingFace.West || this.SnapPoint.BuildingFace == BuildingFace.Up || this.SnapPoint.BuildingFace == BuildingFace.Down))

@@ -16,6 +16,16 @@ namespace ZTrank.BuildingSystem
         [SerializeField]
         private BuildingType m_BuildingType;
 
+        [SerializeField]
+        private bool m_OverrideOrientationCoefficient = false;
+
+        [SerializeField]
+        private float m_OverrideOrientationCoefficientAmount;
+
+        protected virtual float OrientationCoefficient => 90f;
+
+        public Vector3 Orientation { get; set; }
+
         private BuildingSystemSettings m_BuildingSystemSettings;
 
         private void Awake()
@@ -51,7 +61,7 @@ namespace ZTrank.BuildingSystem
 
             if (this.SnapPoint != null && targetFace != BuildingFace.None) 
             {
-                this.transform.rotation = this.GetSnapPointRotation();
+                this.transform.rotation = this.GetSnapPointRotation() * Quaternion.Euler(this.Orientation * (this.m_OverrideOrientationCoefficient ? this.m_OverrideOrientationCoefficientAmount : this.OrientationCoefficient));
             }
             else
             {
@@ -123,6 +133,7 @@ namespace ZTrank.BuildingSystem
         private void LateUpdate()
         {
             this.UpdateMaterial();
+            this.ClearDeadColliders();
         }
 
         private void UpdateMaterial()
@@ -154,6 +165,17 @@ namespace ZTrank.BuildingSystem
             if (((1 << collision.gameObject.layer) & this.m_BuildingSystemSettings.m_BuildingBlockedLayers) != 0)
             {
                 this.m_Collisions.Remove(collision.collider);
+            }
+        }
+
+        private void ClearDeadColliders()
+        {
+            for (int i = this.m_Collisions.Count - 1; i >= 0; --i)
+            {
+                if (this.m_Collisions[i] == null)
+                {
+                    this.m_Collisions.RemoveAt(i);
+                }
             }
         }
     }
